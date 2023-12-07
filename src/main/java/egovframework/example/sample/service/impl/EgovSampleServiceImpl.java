@@ -22,7 +22,6 @@ import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
 
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 
 import javax.annotation.Resource;
 
@@ -60,9 +59,6 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 	  @Resource(name="sampleMapper")
 		private SampleMapper sampleDAO;
 
-	/** ID Generation */
-	@Resource(name = "egovIdGnrService")
-	private EgovIdGnrService egovIdGnrService;
 
 	/**
 	 * 글을 등록한다.
@@ -72,15 +68,8 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 	 */
 	@Override
 	public String insertSample(SampleVO vo) throws Exception {
-		LOGGER.debug(vo.toString());
-
-		/** ID Generation Service */
-		String id = egovIdGnrService.getNextStringId();
-		vo.setId(id);
-		LOGGER.debug(vo.toString());
-
 		sampleDAO.insertSample(vo);
-		return id;
+		return null;
 	}
 
 	/**
