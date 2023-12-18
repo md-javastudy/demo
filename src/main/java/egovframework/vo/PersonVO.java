@@ -4,26 +4,20 @@ public class PersonVO{
 
 	private static final long serialVersionUID = 1L;
 
-	/** 아이디 */
-	private String psId;
-
-	/** 이름 */
+	private Integer psId;
 	private String psNm;
-
-	/** 내용 */
 	private String psSexCd;
-
-	/** 사용여부 */
 	private String psBirth;
-
-	/** 등록자 */
+	private String psTel;
+	private String psEmail;
 	private String remark;
+	private Integer mPartId;
 
-	public String getPsId() {
+	public Integer getPsId() {
 		return psId;
 	}
 
-	public void setPsId(String psId) {
+	public void setPsId(Integer psId) {
 		this.psId = psId;
 	}
 
@@ -57,6 +51,28 @@ public class PersonVO{
 
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	
+	public Integer getMPartId() {
+		return mPartId;
+	}
+
+	public void setMPartId(Integer mPartId) {
+		this.mPartId = mPartId;
+	}
+	public String getPsTel() {
+		return psTel;
+	}
+
+	public void setPsTel(String psTel) {
+		this.psTel = psTel;
+	}
+	public String getPsEmail() {
+		return psEmail;
+	}
+
+	public void setPsEmail(String psEmail) {
+		this.psEmail = psEmail;
 	}
 
 }

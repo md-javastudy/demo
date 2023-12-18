@@ -8,63 +8,76 @@
 		<result property="psSexCd" column="PS_SEX_CD"/>
 		<result property="psBirth" column="PS_BIRTH"/>
 		<result property="remark" column="REMARK"/>
+		<result property="mPartId" column="M_PART_ID"/>
+		<result property="psTel" column="PS_TEL"/>
+		<result property="psEmail" column="PS_EMAIL"/>
 	</resultMap>
 
 	<insert id="insertPerson" parameterType="PersonVO">
 
 			INSERT INTO PERSON
-				( PS_ID
-				  , PS_NM
+				( PS_NM
 				  , PS_SEX_CD
 				  , PS_BIRTH
-				  , REMARK )
-			VALUES ( #{id}
-				  , #{name}
-				  , #{description}
-				  , #{useYn}
-				  , #{regUser} )
+				  , REMARK
+					, M_PART_ID,
+					, PS_TEL
+					, PS_EMAIL
+				) VALUES (
+				  #{psNm}
+				  , #{psSexCd}
+				  , STR_TO_DATE(#{psBirth},'%Y%m%d')
+				  , #{remark}
+					, #{mPartId}
+				  , #{psTel}
+				 	, #{psEmail}
+				)
 
 	</insert>
 
 	<update id="updatePerson">
 
 			UPDATE PERSON
-			SET PS_NM=#{name}
-				, PS_SEX_CD=#{description}
-				, PS_BIRTH=#{useYn}
-				  WHERE PS_ID = #{id}
+			SET PS_NM=#{psNm}
+				, PS_SEX_CD=#{psSexCd}
+				, PS_BIRTH= STR_TO_DATE(#{psBirth},'%Y%m%d')
+				, REMARK=#{remark}
+				, M_PART_ID=#{mPartId}
+				, PS_TEL=#{psTel}
+				, PS_EMAIL=#{psEmail}
+				  WHERE PS_ID = #{psId}
 
 	</update>
 
 	<delete id="deletePerson">
 
 			DELETE FROM PERSON
-			WHERE PS_ID = #{id}
+			WHERE PS_ID = #{psId}
 
 	</delete>
 
 	<select id="selectPerson" resultMap="person">
 
 			SELECT
-				PS_ID, PS_NM, REMARK, PS_SEX_CD, PS_BIRTH
+				PS_ID, PS_NM, REMARK, PS_SEX_CD, PS_BIRTH, M_PART_ID, PS_TEL, PS_EMAIL
 			FROM PERSON
-			WHERE PS_ID = #{id}
+			WHERE PS_ID = #{psId}
 
 	</select>
 
 	<select id="selectPersonList" parameterType="searchVO" resultType="java.util.HashMap">
 
 		SELECT
-		PS_ID, PS_NM, REMARK, PS_SEX_CD, PS_BIRTH
+		PS_ID, PS_NM, REMARK, PS_SEX_CD, DATE_FORMAT(PS_BIRTH, '%Y-%m-%d') AS PS_BIRTH, M_PART_ID, PS_TEL, PS_EMAIL
 		FROM PERSON
 		WHERE 1=1
 		<if test="searchKeyword != null and searchKeyword != ''">
 			<choose>
 				<when test="searchCondition == 0">
-					AND	PS_ID LIKE '%' || #{searchKeyword} || '%'
+					AND	PS_NM LIKE CONCAT('%',#{searchKeyword},'%')
 				</when>
 				<when test="searchCondition == 1">
-					AND	PS_NM LIKE '%' || #{searchKeyword} || '%'
+					AND	PS_SEX_CD LIKE #{searchKeyword}
 				</when>
 			</choose>
 		</if>
@@ -78,12 +91,12 @@
 			FROM PERSON
 			WHERE 1=1
 			<if test="searchKeyword != null and searchKeyword != ''">
-		        <choose>
-		            <when test="searchCondition == 0">
-						AND PS_ID LIKE '%' || #{searchKeyword} || '%'
+				<choose>
+					<when test="searchCondition == 0">
+						AND	PS_NM LIKE CONCAT('%',#{searchKeyword},'%')
 					</when>
-		            <when test="searchCondition == 1">
-						AND	PS_NM LIKE '%' || #{searchKeyword} || '%'
+					<when test="searchCondition == 1">
+						AND	PS_SEX_CD LIKE #{searchKeyword}
 					</when>
 				</choose>
 			</if>
