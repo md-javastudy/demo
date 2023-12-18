@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.mapper.PersonMapper">
+
+	<resultMap id="person" type="egovframework.vo.PersonVO">
+		<result property="psId" column="PS_ID"/>
+		<result property="psNm" column="PS_NM"/>
+		<result property="psSexCd" column="PS_SEX_CD"/>
+		<result property="psBirth" column="PS_BIRTH"/>
+		<result property="remark" column="REMARK"/>
+		<result property="mPartId" column="M_PART_ID"/>
+		<result property="psTel" column="PS_TEL"/>
+		<result property="psEmail" column="PS_EMAIL"/>
+	</resultMap>
+
+	<insert id="insertPerson" parameterType="PersonVO">
+
+			INSERT INTO PERSON
+				( PS_NM
+				  , PS_SEX_CD
+				  , PS_BIRTH
+				  , REMARK
+					, M_PART_ID,
+					, PS_TEL
+					, PS_EMAIL
+				) VALUES (
+				  #{psNm}
+				  , #{psSexCd}
+				  , STR_TO_DATE(#{psBirth},'%Y%m%d')
+				  , #{remark}
+					, #{mPartId}
+				  , #{psTel}
+				 	, #{psEmail}
+				)
+
+	</insert>
+
+	<update id="updatePerson">
+
+			UPDATE PERSON
+			SET PS_NM=#{psNm}
+				, PS_SEX_CD=#{psSexCd}
+				, PS_BIRTH= STR_TO_DATE(#{psBirth},'%Y%m%d')
+				, REMARK=#{remark}
+				, M_PART_ID=#{mPartId}
+				, PS_TEL=#{psTel}
+				, PS_EMAIL=#{psEmail}
+				  WHERE PS_ID = #{psId}
+
+	</update>
+
+	<delete id="deletePerson">
+
+			DELETE FROM PERSON
+			WHERE PS_ID = #{psId}
+
+	</delete>
+
+	<select id="selectPerson" resultMap="person">
+
+			SELECT
+				PS_ID, PS_NM, REMARK, PS_SEX_CD, PS_BIRTH, M_PART_ID, PS_TEL, PS_EMAIL
+			FROM PERSON
+			WHERE PS_ID = #{psId}
+
+	</select>
+
+	<select id="selectPersonList" parameterType="searchVO" resultType="java.util.HashMap">
+
+		SELECT
+		PS_ID, PS_NM, REMARK, PS_SEX_CD, DATE_FORMAT(PS_BIRTH, '%Y-%m-%d') AS PS_BIRTH, M_PART_ID, PS_TEL, PS_EMAIL
+		FROM PERSON
+		WHERE 1=1
+		<if test="searchKeyword != null and searchKeyword != ''">
+			<choose>
+				<when test="searchCondition == 0">
+					AND	PS_NM LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<when test="searchCondition == 1">
+					AND	PS_SEX_CD LIKE #{searchKeyword}
+				</when>
+			</choose>
+		</if>
+		ORDER BY PS_ID ASC
+		LIMIT #{recordCountPerPage} OFFSET #{firstIndex}
+	</select>
+
+	<select id="selectPersonListTotCnt" parameterType="searchVO" resultType="int">
+
+			SELECT COUNT(*) totcnt
+			FROM PERSON
+			WHERE 1=1
+			<if test="searchKeyword != null and searchKeyword != ''">
+				<choose>
+					<when test="searchCondition == 0">
+						AND	PS_NM LIKE CONCAT('%',#{searchKeyword},'%')
+					</when>
+					<when test="searchCondition == 1">
+						AND	PS_SEX_CD LIKE #{searchKeyword}
+					</when>
+				</choose>
+			</if>
+	</select>
+
+</mapper>
